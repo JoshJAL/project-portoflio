@@ -1,4 +1,5 @@
 'use client';
+
 import { supabase } from '@/utils/supabase';
 import { MouseEvent, useEffect, useState } from 'react';
 import VotingBar from './VotingBar';
