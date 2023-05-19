@@ -20,7 +20,7 @@ export default function Votes({ serverVotes }: { serverVotes: VotingOptions[] })
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase, votes, setVotes]);
+  }, [votes, setVotes]);
 
   async function handleVote(
     itemName: string,

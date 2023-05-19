@@ -18,7 +18,7 @@ export default function VotesNotSignedIn({ serverVotes }: { serverVotes: VotingO
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase, votes, setVotes]);
+  }, [votes, setVotes]);
 
   const votingOptions = votes[0];
 
