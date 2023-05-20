@@ -37,7 +37,7 @@ export default async function Voting() {
       ) : (
         <>
           <h1 className='text-xl font-semibold text-center'>Vote for the next project we work on together!</h1>
-          <Votes serverVotes={(data as VotingOptions[]) ?? []} />
+          <Votes serverVotes={(data as VotingOptions[]) ?? []} userId={session.user.id} />
         </>
       )}
     </div>

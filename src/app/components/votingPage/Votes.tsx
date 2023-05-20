@@ -4,10 +4,10 @@ import { supabase } from '@/utils/supabase';
 import { MouseEvent, useEffect, useState } from 'react';
 import VotingBar from './VotingBar';
 import { VotingOptions } from '@/types/VotingOptions';
-import { castVote } from '@/functions/voting';
+import { castVote, createVoter, hasUserVoted, userExists } from '@/functions/voting';
 import VotingContainer from './VotingContainer';
 
-export default function Votes({ serverVotes }: { serverVotes: VotingOptions[] }) {
+export default function Votes({ serverVotes, userId }: { serverVotes: VotingOptions[]; userId: string }) {
   const [votes, setVotes] = useState(serverVotes);
   useEffect(() => {
     const channel = supabase
@@ -31,8 +31,19 @@ export default function Votes({ serverVotes }: { serverVotes: VotingOptions[] })
   ) {
     e.preventDefault();
     if (confirm(`Are you sure you want to vote for ${itemName}?`)) {
-      const data = await castVote(item, count, id);
-      setVotes(data as VotingOptions[]);
+      if (!(await userExists(userId))) {
+        await createVoter(userId)
+          .then(async () => {
+            const data = await castVote(item, count, id);
+            setVotes(data as VotingOptions[]);
+          })
+          .catch((error) => console.error(error));
+      } else if (await userExists(userId)) {
+        const voted = await hasUserVoted(userId);
+        if (voted) return alert('You already voted!');
+        const data = await castVote(item, count, id, userId);
+        setVotes(data as VotingOptions[]);
+      }
     } else {
       return;
     }
